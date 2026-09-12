@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>アズールレーン 指揮官自己紹介カード</title>
-   <link rel="icon" type="image/png" href="icon.png">
+  <!-- html2canvas (画像化ライブラリ) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- Google Fonts 読み込み -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -426,6 +427,10 @@
       <select class="font-select" data-target="#personal-message-input"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#personal-message-input"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
     </label>
+    <!-- 保存ボタン (設定パネルの最後などに追加) -->
+<button id="download-btn" style="background-color: #66b2ff; color: #000; font-weight: bold; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer;">
+  画像をダウンロード
+</button>
   </div>
 
   <!-- プロフィールシート本体 -->
@@ -693,7 +698,38 @@
           }
         });
       });
+    
+// 画像化 ＆ ダウンロード処理
+      const downloadBtn = document.getElementById('download-btn');
+      
+      downloadBtn.addEventListener('click', () => {
+        // 保存時に赤い「設計図ガイド」を一時的に非表示にする
+        const guide = document.getElementById('design-guide');
+        const originalDisplay = guide.style.display;
+        guide.style.display = 'none';
 
+        // ダウンロード実行
+        html2canvas(sheetBody, {
+          scale: 2, // 2倍解像度で綺麗に出力
+          useCORS: true // 外部画像の読み込み許可
+        }).then(canvas => {
+          // 非表示にしたガイドを元に戻す
+          guide.style.display = originalDisplay;
+
+          // 画像としてダウンロードさせる処理
+          const link = document.createElement('a');
+          link.download = 'azurlane_card.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        }).catch(err => {
+          guide.style.display = originalDisplay;
+          alert('画像の生成に失敗しました。');
+          console.error(err);
+        });
+      });
+
+
+      
     });
   </script>
 </body>
