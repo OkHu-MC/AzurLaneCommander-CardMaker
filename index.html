@@ -728,7 +728,28 @@
           }
         });
       });
-    
+    // 6. 全体の文字色一括変更
+      const allTextColor = document.getElementById('all-text-color');
+      allTextColor.addEventListener('input', (e) => {
+        const color = e.target.value;
+        // カード全体の基本色を変更
+        sheetBody.style.color = color;
+        // 各入力欄・エリア内のテキスト色も一括適用
+        const inputs = sheetBody.querySelectorAll('input, textarea, .label, .x-id-display');
+        inputs.forEach(el => el.style.color = color);
+      });
+
+      // 7. 各要素ごとの文字色変更処理
+      const colorSelects = document.querySelectorAll('.color-select');
+      colorSelects.forEach((input) => {
+        input.addEventListener('input', (e) => {
+          const targetSelector = e.target.getAttribute('data-target');
+          const targetElement = document.querySelector(targetSelector);
+          if (targetElement) {
+            targetElement.style.color = e.target.value;
+          }
+        });
+      });
 // 画像化 ＆ ダウンロード処理
       const downloadBtn = document.getElementById('download-btn');
       
