@@ -3,18 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>アズールレーン 指揮官自己紹介カード</title>
-  <!-- html2canvas (画像化ライブラリ) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <!-- Google Fonts 読み込み -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@500;700&family=Noto+Sans+JP:wght@500;700&family=Shippori+Mincho:wght@600&display=swap" rel="stylesheet">
-
-  <!-- QRコード生成ライブラリ (QRCode.js) -->
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@500;700&family=Noto+Sans+JP:wght@500;700&family=Shippori+Mincho:wght@600&display=swap" rel="stylesheet" crossorigin="anonymous">
+
   <style>
-    /* 画面全体 */
     body {
       margin: 0;
       padding: 20px;
@@ -27,7 +24,6 @@
       font-family: 'Noto Sans JP', sans-serif;
     }
 
-    /* 設定用パネル */
     .font-controls {
       background-color: #2a3442;
       border: 1px solid #445366;
@@ -37,7 +33,8 @@
       box-sizing: border-box;
       display: flex;
       flex-wrap: wrap;
-      gap: 12px 20px;
+      gap: 12px 15px;
+      align-items: center;
     }
 
     .font-controls-title {
@@ -60,7 +57,6 @@
       padding-left: 8px;
     }
 
-    /* 設定系要素の中央揃え設定 */
     .font-controls label {
       display: flex;
       align-items: center;
@@ -81,7 +77,6 @@
       font-size: 13px;
       outline: none;
       text-align: center;
-      text-align-last: center; /* セレクトドロップダウン内の中央揃え */
     }
 
     .font-controls input[type="color"] {
@@ -91,7 +86,17 @@
       cursor: pointer;
     }
 
-    /* 指揮官カード本体 */
+    #download-btn {
+      background-color: #66b2ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
     .sheet-body {
       position: relative;
       width: 1000px;
@@ -103,9 +108,9 @@
       padding: 30px;
       font-family: 'Noto Sans JP', sans-serif;
       overflow: hidden;
+      color: #ffffff;
     }
 
-    /* 設計図ガイド */
     #design-guide {
       position: absolute;
       top: 0;
@@ -119,7 +124,6 @@
       z-index: 9999;
     }
 
-    /* ドロップゾーン共通スタイル */
     .drop-zone {
       position: absolute;
       border: 3px dashed #66b2ff;
@@ -150,29 +154,28 @@
       display: none;
     }
 
-    /* 汎用入力コンテナ */
     .box-item {
       position: absolute;
-      background-color: rgba(240, 240, 240, 0.2); /* 開発用背景色 */
+      background-color: rgba(240, 240, 240, 0.2);
       border-radius: 12px;
-      padding: 35px 10px 10px 10px;
       box-sizing: border-box;
       overflow: hidden;
+      padding: 32px 10px 8px 10px;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* 枠内ラベル */
     .box-item .label {
       position: absolute;
       top: 5px;
       left: 10px;
-      color: #fff;
+      color: inherit;
       text-decoration: underline;
       pointer-events: none;
       font-size: 20px;
-      font-family: inherit;
+      z-index: 3;
     }
 
-    /* 枠内入力フィールドの中央揃え適用部分 (修正: !important を除去) */
     .box-item input[type="text"],
     .box-item textarea {
       width: 100%;
@@ -180,19 +183,24 @@
       background: transparent;
       border: none;
       outline: none;
-      color: #fff;
+      color: inherit;
       font-size: 18px;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      resize: none;
-      font-family: inherit;
       position: relative;
       z-index: 2;
-      text-align: center; /* 入力文字の中央揃え */
+      text-align: center;
     }
 
-    /* 推し陣営専用 透かし画像背景レイヤー */
+    .box-item textarea {
+      resize: none;
+      text-align: left;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
     #faction-bg-watermark {
       position: absolute;
       top: 0;
@@ -207,7 +215,6 @@
       transition: background-image 0.3s ease;
     }
 
-    /* SNS専用エリアのレイアウト */
     .sns-container {
       display: flex;
       flex-direction: column;
@@ -232,7 +239,7 @@
     .x-id-display {
       font-size: 18px;
       font-weight: bold;
-      color: #fff;
+      color: inherit;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -243,19 +250,14 @@
   </style>
 </head>
 <body>
-<b>アズールレーン 指揮官自己紹介カード メーカー</b>
-<a href="https://github.com/OkHu-MC/AzurLaneCommander-CardMaker">本プロジェクトのGitHubページはこちら</a>
+  <b>アズールレーン 指揮官自己紹介カード メーカー</b>
+  <a href="https://github.com/OkHu-MC/AzurLaneCommander-CardMaker" style="color: #66b2ff;">本プロジェクトのGitHubページはこちら</a>
 
-  <!-- 設定パネル（コントロール） -->
   <div class="font-controls">
     <p class="font-controls-title">全体カラー ＆ 入力アシスト設定</p>
 
-    <label>背景色(左上):
-      <input type="color" id="bg-color-top" value="#007FFF">
-    </label>
-    <label>背景色(右下):
-      <input type="color" id="bg-color-bottom" value="#FFFF00">
-    </label>
+    <label>背景色(左上): <input type="color" id="bg-color-top" value="#007FFF"></label>
+    <label>背景色(右下): <input type="color" id="bg-color-bottom" value="#FFFF00"></label>
 
     <label>【所属サーバー選択】:
       <select id="server-select">
@@ -299,17 +301,11 @@
       </select>
     </label>
 
-    <label>SNS URL:
-      <input type="text" id="sns-url-input" placeholder="https://x.com/your_id" style="width: 160px;">
-    </label>
-
-    <label>表示ID:
-      <input type="text" id="sns-id-input" placeholder="@your_id" style="width: 100px;">
-    </label>
+    <label>SNS URL: <input type="text" id="sns-url-input" placeholder="https://x.com/your_id" style="width: 160px;"></label>
+    <label>表示ID: <input type="text" id="sns-id-input" placeholder="@your_id" style="width: 100px;"></label>
 
     <p class="font-controls-subtitle">一括 ＆ 各枠のフォント・サイズ調整</p>
 
-    <!-- 一括変更 -->
     <label>【全体フォント】:
       <select class="font-select" data-target=".sheet-body">
         <option value="Noto Sans JP">ゴシック</option>
@@ -319,23 +315,11 @@
       </select>
     </label>
 
-    <label>【全体サイズ】:
-      <select class="size-select" data-target=".sheet-body" data-type="zoom">
-        <option value="100%">100%</option>
-        <option value="110%">110%</option>
-        <option value="120%">120%</option>
-        <option value="80%">80%</option>
-      </select>
-    </label>
-
-    <label>全体文字色:
-      <input type="color" id="all-text-color" value="#ffffff">
-    </label>
-
+    <label>全体文字色: <input type="color" id="all-text-color" value="#ffffff"></label>
+    <button id="download-btn">📷 画像をダウンロード</button>
 
     <div style="width: 100%; height: 0; margin: 0;"></div>
 
-    <!-- 指揮官名 (修正: data-target のID整合性調整) -->
     <label>指揮官名(ラベル):
       <select class="font-select" data-target="#box-commander-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-commander-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -347,11 +331,6 @@
       <input type="color" class="color-select" data-target="#commander-name-input" value="#ffffff">
     </label>
 
-
-
-
-
-    <!-- 所属サーバー -->
     <label>サーバー(ラベル):
       <select class="font-select" data-target="#box-server-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-server-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -363,7 +342,6 @@
       <input type="color" class="color-select" data-target="#server-name-input" value="#ffffff">
     </label>
 
-    <!-- 大艦隊 -->
     <label>大艦隊(ラベル):
       <select class="font-select" data-target="#box-group-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-group-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -375,7 +353,6 @@
       <input type="color" class="color-select" data-target="#group-name-input" value="#ffffff">
     </label>
 
-    <!-- 就任日 -->
     <label>就任日(ラベル):
       <select class="font-select" data-target="#box-appointment-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-appointment-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -387,7 +364,6 @@
       <input type="color" class="color-select" data-target="#appointment-date-input" value="#ffffff">
     </label>
 
-    <!-- メイン海域 -->
     <label>海域(ラベル):
       <select class="font-select" data-target="#box-sea-area-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-sea-area-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -399,7 +375,6 @@
       <input type="color" class="color-select" data-target="#sea-area-input" value="#ffffff">
     </label>
 
-    <!-- 推し陣営 -->
     <label>推し陣営(ラベル):
       <select class="font-select" data-target="#box-faction-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-faction-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -411,11 +386,10 @@
       <input type="color" class="color-select" data-target="#faction-name-input" value="#ffffff">
     </label>
 
-    <!-- 自由欄1 -->
     <label>自由欄1(タイトル):
       <select class="font-select" data-target="#first-label-input"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#first-label-input"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
-        <input type="color" class="color-select" data-target="#first-label-input" value="#ffffff">
+      <input type="color" class="color-select" data-target="#first-label-input" value="#ffffff">
     </label>
     <label>自由欄1(本文):
       <select class="font-select" data-target="#first-text-input"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
@@ -423,7 +397,6 @@
       <input type="color" class="color-select" data-target="#first-text-input" value="#ffffff">
     </label>
 
-    <!-- 嫁叫び -->
     <label>嫁叫び(ラベル):
       <select class="font-select" data-target="#box-oishi-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-oishi-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -435,12 +408,10 @@
       <input type="color" class="color-select" data-target="#oishi-message-input" value="#ffffff">
     </label>
 
-    <!-- 嫁PR -->
     <label>嫁PR(ラベル):
       <select class="font-select" data-target="#box-yome-pr-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
-      <select class="size-select" data-target="#box-yome-pr-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</	option></select>
+      <select class="size-select" data-target="#box-yome-pr-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
       <input type="color" class="color-select" data-target="#box-yome-pr-label" value="#ffffff">
-    </label>
     </label>
     <label>嫁PR(本文):
       <select class="font-select" data-target="#yome-pr-input"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
@@ -448,7 +419,6 @@
       <input type="color" class="color-select" data-target="#yome-pr-input" value="#ffffff">
     </label>
 
-    <!-- ひとこと -->
     <label>ひとこと(ラベル):
       <select class="font-select" data-target="#box-message-label"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
       <select class="size-select" data-target="#box-message-label"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
@@ -456,120 +426,97 @@
     </label>
     <label>ひとこと(本文):
       <select class="font-select" data-target="#personal-message-input"><option value="">標準</option><option value="Dela Gothic One">極太</option><option value="M PLUS Rounded 1c">丸ゴ</option><option value="Shippori Mincho">明朝</option><option value="Noto Sans JP">ゴシック</option></select>
-      <select class="size-select" data-target="#personal-message-input"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select> 
+      <select class="size-select" data-target="#personal-message-input"><option value="">標準</option><option value="14px">小</option><option value="30px">中</option><option value="56px">大</option></select>
       <input type="color" class="color-select" data-target="#personal-message-input" value="#ffffff">
     </label>
-    <!-- 保存ボタン (設定パネルの最後などに追加) -->
-<button id="download-btn" style="background-color: #66b2ff; color: #000; font-weight: bold; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer;">
-  画像をダウンロード
-</button>
   </div>
 
-  <!-- プロフィールシート本体 -->
   <div class="sheet-body" id="sheet-body">
-
-    <!-- 開発用設計図レイヤー -->
     <div id="design-guide"></div>
 
-    <!-- アイコン画像エリア -->
     <div id="drop-zone1" class="drop-zone">
       <span>ここにアイコン画像を<br>ドロップ または クリック</span>
       <img id="preview1" class="preview-img" alt="プレビュー画像">
     </div>
     <input type="file" id="file-input1" accept="image/*" style="display: none;">
 
-    <!-- 指揮官名エリア -->
     <div class="box-item" style="top: 35px; left: 405px; width: 570px; height: 150px;">
       <span class="label" id="box-commander-label">指揮官名</span>
       <input type="text" placeholder="名前を入力" id="commander-name-input">
     </div>
 
-    <!-- 所属サーバー -->
     <div class="box-item" style="top: 200px; left: 405px; width: 570px; height: 130px;">
       <span class="label" id="box-server-label">所属サーバー</span>
       <input type="text" placeholder="プルダウンメニューから自動入力できます" id="server-name-input">
     </div>
 
-    <!-- 大艦隊 -->
     <div class="box-item" style="top: 350px; left: 405px; width: 570px; height: 130px;">
       <span class="label" id="box-group-label">大艦隊の所属有無</span>
       <input type="text" placeholder="### 募集中 or 大艦隊名入力 ###" id="group-name-input">
     </div>
 
-    <!-- バナー画像エリア -->
     <div id="drop-zone2" class="drop-zone">
       <span>ここにバナー画像を<br>ドロップ または クリック</span>
       <img id="preview2" class="preview-img" alt="プレビュー画像">
     </div>
     <input type="file" id="file-input2" accept="image/*" style="display: none;">
 
-    <!-- 自由欄1 (修正: 自由欄本文を input から textarea に変更) -->
     <div class="box-item" style="top: 700px; left: 405px; width: 570px; height: 190px;">
-      <input type="text" placeholder="自由欄" id="first-label-input" style="height: 30px; font-weight: bold;">
-      <textarea placeholder="自由欄" id="first-text-input" style="height: calc(100% - 30px);"></textarea>
+      <input type="text" placeholder="自由欄" id="first-label-input" style="height: 30px; font-weight: bold; text-align: left;">
+      <textarea placeholder="自由欄" id="first-text-input"></textarea>
     </div>
 
-    <!-- 嫁PR -->
     <div class="box-item" style="top: 1060px; left: 440px; width: 540px; height: 400px;">
       <span class="label" id="box-yome-pr-label">嫁艦を推すことになったきっかけ</span>
       <textarea placeholder="自由にメッセージを入力" id="yome-pr-input"></textarea>
     </div>
 
-    <!-- ひとことエリア -->
     <div class="box-item" style="top: 1480px; left: 410px; width: 560px; height: 140px;">
       <span class="label" id="box-message-label">ひとこと</span>
       <textarea placeholder="自由にメッセージを入力" id="personal-message-input"></textarea>
     </div>
 
-    <!-- 就任日エリア -->
     <div class="box-item" style="top: 400px; left: 30px; width: 360px; height: 90px;">
       <span class="label" id="box-appointment-label">就任日</span>
       <input type="text" placeholder="2017.9.14" id="appointment-date-input">
     </div>
 
-    <!-- メイン海域 -->
     <div class="box-item" style="top: 510px; left: 30px; width: 360px; height: 90px;">
       <span class="label" id="box-sea-area-label">メイン海域</span>
       <input type="text" placeholder="海域名を入力" id="sea-area-input">
     </div>
 
-    <!-- 推し陣営（背景透かし画像レイヤー付き） -->
     <div class="box-item" style="top: 620px; left: 30px; width: 360px; height: 270px;">
       <div id="faction-bg-watermark"></div>
       <span class="label" id="box-faction-label">推し陣営</span>
       <input type="text" placeholder="プルダウンメニューから選択" id="faction-name-input">
     </div>
 
-    <!-- 嫁を叫ぶところ -->
     <div class="box-item" style="top: 920px; left: 30px; width: 945px; height: 120px;">
       <span class="label" id="box-oishi-label">私の嫁艦は</span>
       <textarea placeholder="さぁここで嫁艦を紹介してください！！！" id="oishi-message-input"></textarea>
     </div>
 
-    <!-- 推し画像エリア -->
     <div id="drop-zone3" class="drop-zone">
       <span>ここに推し艦の画像を<br>ドロップ または クリック</span>
       <img id="preview3" class="preview-img" alt="プレビュー画像">
     </div>
     <input type="file" id="file-input3" accept="image/*" style="display: none;">
 
-    <!-- SNS Area -->
-    <div class="box-item" style="top: 1480px; left: 30px; width: 360px; height: 280px;">
+    <div class="box-item" style="top: 1480px; left: 30px; width: 360px; height: 280px; padding-top: 25px;">
       <span class="label" id="box-sns-label">SNS</span>
       <div class="sns-container">
         <div id="qrcode-display"></div>
         <div class="x-id-display" id="x-id-container" style="display: none;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           <span id="x-id-text"></span>
         </div>
       </div>
     </div>
     <img src="project_icon.png" alt="プロジェクトアイコン" style="position: absolute; top: 1610px; left: 400px; width: 600px; height: 225px;">
-
   </div>
 
   <script>
-    // --- 画像アップロード共通セットアップ関数 ---
     function setupImageDropZone(zoneId, inputId, previewId) {
       const dropZone = document.getElementById(zoneId);
       const fileInput = document.getElementById(inputId);
@@ -600,9 +547,7 @@
       dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
       dropZone.addEventListener('drop', (e) => {
         dropZone.classList.remove('dragover');
-        if (e.dataTransfer.files.length > 0) {
-          showPreview(e.dataTransfer.files[0]);
-        }
+        if (e.dataTransfer.files.length > 0) showPreview(e.dataTransfer.files[0]);
       });
     }
 
@@ -610,10 +555,29 @@
     setupImageDropZone('drop-zone2', 'file-input2', 'preview2');
     setupImageDropZone('drop-zone3', 'file-input3', 'preview3');
 
+    // 使用している全フォント×ウェイトの組み合わせ（Google Fontsで実際に読み込んでいるウェイトのみ）
+    const FONT_SPECS = [
+      '400 16px "Dela Gothic One"',
+      '500 16px "M PLUS Rounded 1c"',
+      '700 16px "M PLUS Rounded 1c"',
+      '500 16px "Noto Sans JP"',
+      '700 16px "Noto Sans JP"',
+      '600 16px "Shippori Mincho"'
+    ];
+
+    // 全フォントを強制的にロード（未使用のフォントはブラウザが遅延読み込みするため、
+    // 選択直後にダウンロードしても間に合うようここで先読みしておく）
+    function preloadAllFonts() {
+      return Promise.all(FONT_SPECS.map(spec => document.fonts.load(spec)))
+        .then(() => document.fonts.ready);
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Web Font読み込み完了を確実に待機
+      preloadAllFonts().then(() => {
+        console.log('Fonts loaded successfully.');
+      });
 
-      // 1. 背景色グラデーション変更
       const bgColorTop = document.getElementById('bg-color-top');
       const bgColorBottom = document.getElementById('bg-color-bottom');
       const sheetBody = document.getElementById('sheet-body');
@@ -621,40 +585,29 @@
       function updateBackgroundGradient() {
         sheetBody.style.background = `linear-gradient(135deg, ${bgColorTop.value} 0%, ${bgColorBottom.value} 100%)`;
       }
-
       bgColorTop.addEventListener('input', updateBackgroundGradient);
       bgColorBottom.addEventListener('input', updateBackgroundGradient);
 
-
-      // 2. プルダウン連動 (テキスト入力 ＋ 透かし背景画像変更)
       const serverSelect = document.getElementById('server-select');
       const serverInput = document.getElementById('server-name-input');
-      serverSelect.addEventListener('change', (e) => {
-        serverInput.value = e.target.value;
-      });
+      serverSelect.addEventListener('change', (e) => { serverInput.value = e.target.value; });
 
       const factionSelect = document.getElementById('faction-select');
       const factionInput = document.getElementById('faction-name-input');
       const factionWatermark = document.getElementById('faction-bg-watermark');
 
       factionSelect.addEventListener('change', (e) => {
-        // テキスト枠への入力
         factionInput.value = e.target.value;
-
-        // 透かし画像の変更 (data-img 属性から取得)
         const selectedOption = e.target.options[e.target.selectedIndex];
         const imgPath = selectedOption.getAttribute('data-img') || 'layout.png';
         factionWatermark.style.backgroundImage = `url('${imgPath}')`;
       });
 
-
-      // 3. QRコード ＆ X ID
       const snsUrlInput = document.getElementById('sns-url-input');
       const snsIdInput = document.getElementById('sns-id-input');
       const qrDisplay = document.getElementById('qrcode-display');
       const xIdContainer = document.getElementById('x-id-container');
       const xIdText = document.getElementById('x-id-text');
-
       let qrcodeObj = null;
 
       function updateSNSDisplay() {
@@ -687,102 +640,145 @@
           xIdContainer.style.display = 'none';
         }
       }
-
       snsUrlInput.addEventListener('input', updateSNSDisplay);
       snsIdInput.addEventListener('input', updateSNSDisplay);
 
-
-      // 4. フォント切替処理
-      const fontSelects = document.querySelectorAll('.font-select');
-      fontSelects.forEach((select) => {
+      // フォント適用ロジックの修正 (!important の強制付与)
+      document.querySelectorAll('.font-select').forEach((select) => {
         select.addEventListener('change', (e) => {
           const targetSelector = e.target.getAttribute('data-target');
-          const targetElement = document.querySelector(targetSelector);
-          const fontName = e.target.value;
-
-          if (targetElement) {
+          const target = document.querySelector(targetSelector);
+          if (target) {
+            const fontName = e.target.value;
             if (fontName === "") {
-              targetElement.style.fontFamily = 'inherit';
-            } else if (fontName === "serif" || fontName === "sans-serif") {
-              targetElement.style.fontFamily = fontName;
+              target.style.removeProperty('font-family');
             } else {
-              targetElement.style.fontFamily = `"${fontName}", sans-serif`;
+              target.style.setProperty('font-family', `"${fontName}", sans-serif`, 'important');
             }
           }
         });
       });
 
-
-      // 5. サイズ切替処理
-      const sizeSelects = document.querySelectorAll('.size-select');
-      sizeSelects.forEach((select) => {
+      // 文字サイズ適用ロジックの修正
+      document.querySelectorAll('.size-select').forEach((select) => {
         select.addEventListener('change', (e) => {
           const targetSelector = e.target.getAttribute('data-target');
-          const targetElement = document.querySelector(targetSelector);
-          const sizeVal = e.target.value;
-
-          if (targetElement) {
+          const target = document.querySelector(targetSelector);
+          if (target) {
+            const sizeVal = e.target.value;
             if (sizeVal === "") {
-              targetElement.style.fontSize = '';
+              target.style.removeProperty('font-size');
             } else {
-              targetElement.style.fontSize = sizeVal;
+              target.style.setProperty('font-size', sizeVal, 'important');
             }
           }
         });
       });
-    // 6. 全体の文字色一括変更
-      const allTextColor = document.getElementById('all-text-color');
-      allTextColor.addEventListener('input', (e) => {
-        const color = e.target.value;
-        // カード全体の基本色を変更
-        sheetBody.style.color = color;
-        // 各入力欄・エリア内のテキスト色も一括適用
-        const inputs = sheetBody.querySelectorAll('input, textarea, .label, .x-id-display');
-        inputs.forEach(el => el.style.color = color);
+
+      document.getElementById('all-text-color').addEventListener('input', (e) => {
+        sheetBody.style.color = e.target.value;
       });
 
-      // 7. 各要素ごとの文字色変更処理
-      const colorSelects = document.querySelectorAll('.color-select');
-      colorSelects.forEach((input) => {
+      document.querySelectorAll('.color-select').forEach((input) => {
         input.addEventListener('input', (e) => {
           const targetSelector = e.target.getAttribute('data-target');
-          const targetElement = document.querySelector(targetSelector);
-          if (targetElement) {
-            targetElement.style.color = e.target.value;
+          const target = document.querySelector(targetSelector);
+          if (target) {
+            target.style.setProperty('color', e.target.value, 'important');
           }
         });
       });
-// 画像化 ＆ ダウンロード処理
+
+      // 保存処理
       const downloadBtn = document.getElementById('download-btn');
-      
-      downloadBtn.addEventListener('click', () => {
-        // 保存時に赤い「設計図ガイド」を一時的に非表示にする
+      downloadBtn.addEventListener('click', async () => {
+        const originalBtnText = downloadBtn.textContent;
+        downloadBtn.disabled = true;
+        downloadBtn.textContent = 'フォント読み込み中...';
+
+        // html2canvasはfillText時点でブラウザにロード済みのフォントしか使えないため、
+        // ここで確実に全フォントの読み込みを待ってから描画に進む
+        try {
+          await preloadAllFonts();
+        } catch (e) {
+          console.warn('フォントの事前読み込みに失敗しましたが処理を続行します。', e);
+        }
+        // fonts.readyの解決直後はまだ1フレーム分の再描画が反映されていないことがあるため、
+        // 2フレーム分待って確実に画面にフォントが反映された状態にする
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        downloadBtn.textContent = '画像を生成中...';
+
         const guide = document.getElementById('design-guide');
-        const originalDisplay = guide.style.display;
         guide.style.display = 'none';
 
-        // ダウンロード実行
-        html2canvas(sheetBody, {
-          scale: 2, // 2倍解像度で綺麗に出力
-          useCORS: true // 外部画像の読み込み許可
-        }).then(canvas => {
-          // 非表示にしたガイドを元に戻す
-          guide.style.display = originalDisplay;
+        const formElements = sheetBody.querySelectorAll('input, textarea');
+        const replacements = [];
 
-          // 画像としてダウンロードさせる処理
+        // 個別コピーするプロパティ一覧
+        // ※ getComputedStyle().cssText はFirefox/旧Edgeでは常に空文字列を返す仕様のため
+        //   (Chrome/Safariでしか動かない)、丸ごとコピーはせず必要なプロパティだけ個別に移す
+        const STYLE_PROPS = [
+          'fontFamily', 'fontSize', 'fontWeight', 'fontStyle',
+          'color', 'textAlign', 'lineHeight', 'letterSpacing'
+        ];
+
+        formElements.forEach(el => {
+          const div = document.createElement('div');
+          div.textContent = el.value || el.placeholder || '';
+
+          const computedStyle = window.getComputedStyle(el);
+          STYLE_PROPS.forEach(prop => {
+            div.style[prop] = computedStyle[prop];
+          });
+          div.style.width = '100%';
+          div.style.height = '100%';
+          div.style.boxSizing = 'border-box';
+          div.style.background = 'transparent';
+          div.style.border = 'none';
+          div.style.whiteSpace = el.tagName.toLowerCase() === 'textarea' ? 'pre-wrap' : 'nowrap';
+          div.style.wordBreak = 'break-all';
+          div.style.display = 'flex';
+          div.style.alignItems = el.tagName.toLowerCase() === 'textarea' ? 'flex-start' : 'center';
+          div.style.justifyContent = computedStyle.textAlign === 'center' ? 'center' : 'flex-start';
+
+          if (!el.value) div.style.opacity = '0.5';
+
+          el.style.display = 'none';
+          el.parentNode.appendChild(div);
+          replacements.push({ original: el, replica: div });
+        });
+
+        html2canvas(sheetBody, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          imageTimeout: 15000,
+          logging: false
+        }).then(canvas => {
+          replacements.forEach(item => {
+            item.replica.remove();
+            item.original.style.display = '';
+          });
+          guide.style.display = '';
+
           const link = document.createElement('a');
           link.download = 'azurlane_card.png';
           link.href = canvas.toDataURL('image/png');
           link.click();
         }).catch(err => {
-          guide.style.display = originalDisplay;
-          alert('画像の生成に失敗しました。');
+          replacements.forEach(item => {
+            item.replica.remove();
+            item.original.style.display = '';
+          });
+          guide.style.display = '';
+          alert('画像の保存に失敗しました。');
           console.error(err);
+        }).finally(() => {
+          downloadBtn.disabled = false;
+          downloadBtn.textContent = originalBtnText;
         });
       });
-
-
-      
     });
   </script>
 </body>
